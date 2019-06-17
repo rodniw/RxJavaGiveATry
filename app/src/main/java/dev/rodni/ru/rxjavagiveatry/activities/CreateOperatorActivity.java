@@ -1,4 +1,4 @@
-package dev.rodni.ru.rxjavagiveatry;
+package dev.rodni.ru.rxjavagiveatry.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.util.List;
 
+import dev.rodni.ru.rxjavagiveatry.R;
 import dev.rodni.ru.rxjavagiveatry.data.DataSource;
 import dev.rodni.ru.rxjavagiveatry.entity.Task;
 import io.reactivex.Observable;
@@ -26,7 +27,7 @@ So I recommend only using it to create a single observable.
 range() and repeat() are great for replacing loops or any iterative processes / methods.
 You can do the work on a background thread and observe the results on the main thread.
  */
-public class FirstOperatorsActivity extends AppCompatActivity {
+public class CreateOperatorActivity extends AppCompatActivity {
 
     private static final String TAG = "Observable";
 

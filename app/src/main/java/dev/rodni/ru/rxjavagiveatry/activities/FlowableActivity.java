@@ -1,4 +1,4 @@
-package dev.rodni.ru.rxjavagiveatry;
+package dev.rodni.ru.rxjavagiveatry.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.util.Log;
 
 import org.reactivestreams.Subscription;
 
+import dev.rodni.ru.rxjavagiveatry.R;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableSubscriber;

@@ -1,9 +1,10 @@
-package dev.rodni.ru.rxjavagiveatry;
+package dev.rodni.ru.rxjavagiveatry.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import dev.rodni.ru.rxjavagiveatry.R;
 import dev.rodni.ru.rxjavagiveatry.data.DataSource;
 import dev.rodni.ru.rxjavagiveatry.entity.Task;
 import io.reactivex.Observable;
