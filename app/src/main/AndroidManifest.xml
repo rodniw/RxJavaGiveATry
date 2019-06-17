@@ -9,13 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.RepeatOperatorActivity">
+        <activity android:name=".activities.createoperatorsactivities.IntervalOperatorActivity">
         </activity>
-        <activity android:name=".activities.RangeOperatorActivity">
+        <activity android:name=".activities.createoperatorsactivities.RepeatOperatorActivity">
         </activity>
-        <activity android:name=".activities.JustOperatorActivity">
+        <activity android:name=".activities.createoperatorsactivities.RangeOperatorActivity">
         </activity>
-        <activity android:name=".activities.CreateOperatorActivity">
+        <activity android:name=".activities.createoperatorsactivities.JustOperatorActivity">
+        </activity>
+        <activity android:name=".activities.createoperatorsactivities.CreateOperatorActivity">
         </activity>
         <activity android:name=".activities.FlowableActivity">
         </activity>

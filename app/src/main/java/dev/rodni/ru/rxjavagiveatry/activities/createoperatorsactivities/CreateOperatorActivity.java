@@ -1,4 +1,4 @@
-package dev.rodni.ru.rxjavagiveatry.activities;
+package dev.rodni.ru.rxjavagiveatry.activities.createoperatorsactivities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
