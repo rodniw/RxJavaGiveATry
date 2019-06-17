@@ -9,13 +9,18 @@ import dev.rodni.ru.rxjavagiveatry.entity.Task;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "Observable";
+
+    //we need compositedisposable object to unsubscribe all our observable inside ondestroy method
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         taskObservable.subscribe(new Observer<Task>() {
             @Override
             public void onSubscribe(Disposable d) {
+                //here we added our subscription into comp disp to have possibility to unsubscribe then after
+                disposables.add(d);
                 Log.d(TAG,"onSubscribe");
             }
 
@@ -64,5 +71,20 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG,"onComplete");
             }
         });
+
+        disposables.add(taskObservable.subscribe(new Consumer<Task>() {
+            @Override
+            public void accept(Task task) throws Exception {
+
+            }
+        }));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //by clear() method we throw away all our subscriptions from composite disposable
+        disposables.clear();
+        //but we have one more method - dispose() and by this method we can hardly deprecate every description
     }
 }
