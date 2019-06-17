@@ -4,8 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import java.util.logging.Logger;
-
 import dev.rodni.ru.rxjavagiveatry.R;
 import dev.rodni.ru.rxjavagiveatry.entity.Task;
 import io.reactivex.Observable;
