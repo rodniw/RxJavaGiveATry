@@ -32,15 +32,26 @@ public class MainActivity extends AppCompatActivity {
 
         compDisposable = new CompositeDisposable();
 
+        //just operator convert smth to the Observer which will emit data
         myObservable = Observable.just(helloText)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+        //        .subscribeOn(Schedulers.io())
+        //        .observeOn(AndroidSchedulers.mainThread());
 
+        compDisposable.add(
+                myObservable
+                        .subscribeWith(getObserver())
+        );
+        //myObservable.subscribe(myObserver);
+    }
+
+    protected DisposableObserver getObserver() {
         myObserver = new DisposableObserver<String>() {
             @Override
             public void onNext(String s) {
                 Log.i(TAG, "onNext");
-                textField.setText(s);
+                //textField.setText(s);
             }
 
             @Override
@@ -53,9 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "onComplete");
             }
         };
-
-        compDisposable.add(myObserver);
-        myObservable.subscribe(myObserver);
+        return myObserver;
     }
 
     @Override
