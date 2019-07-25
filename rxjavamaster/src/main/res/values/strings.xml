@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">rxjavamaster</string>
+    <string name="hello_rxjava_world">Hello from RxJava</string>
+</resources>
