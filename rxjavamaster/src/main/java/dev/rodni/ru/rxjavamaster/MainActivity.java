@@ -8,13 +8,18 @@ import android.widget.TextView;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
     private static String TAG = "TAG";
     private Observable<String> myObservable;
-    private Observer<String> myObserver;
+    private DisposableObserver<String> myObserver;
+    //private Disposable disposable;
+
     private String helloText = "Hello from RxJava";
     private TextView textField;
 
@@ -25,14 +30,11 @@ public class MainActivity extends AppCompatActivity {
         //helloText = getString(R.string.hello_rxjava_world);
         textField = findViewById(R.id.hello_rxjava_text);
 
-        myObservable = Observable.just(helloText);
+        myObservable = Observable.just(helloText)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
 
-        myObserver = new Observer<String>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.i(TAG, "onSubscribe");
-            }
-
+        myObserver = new DisposableObserver<String>() {
             @Override
             public void onNext(String s) {
                 Log.i(TAG, "onNext");
@@ -51,5 +53,12 @@ public class MainActivity extends AppCompatActivity {
         };
 
         myObservable.subscribe(myObserver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        myObserver.dispose();
+        //disposable.dispose();
     }
 }
