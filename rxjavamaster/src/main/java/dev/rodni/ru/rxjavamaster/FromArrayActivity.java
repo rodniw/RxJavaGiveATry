@@ -12,15 +12,16 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public class MainActivity2 extends AppCompatActivity {
+//fromArray, fromCallable, fromFuture, fromIterable, fromPublisher
+public class FromArrayActivity extends AppCompatActivity {
 
     private static String TAG = "TAG";
-    //private Observable<String[]> myObservable;
     private Observable<String> myObservable;
     private DisposableObserver<String> myObserver;
     private CompositeDisposable compDisposable;
 
-    //private String[] helloArray = {"Hello A", "Hello B", "Hello C"};
+    private String[] helloArray = {"Hello A", "Hello B", "Hello C"};
+
     private TextView textField;
 
     @Override
@@ -31,9 +32,9 @@ public class MainActivity2 extends AppCompatActivity {
 
         compDisposable = new CompositeDisposable();
 
-        //just operator convert smth to the Observer which will emit data
-        //myObservable = Observable.just(helloArray)
-        myObservable = Observable.just("Hello A", "Hello B", "Hello C")
+        //for example the difference from just here is that
+        //just will emit the only one observable but from array many
+        myObservable = Observable.fromArray(helloArray)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
