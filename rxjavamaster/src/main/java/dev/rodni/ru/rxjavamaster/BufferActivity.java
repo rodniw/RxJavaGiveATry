@@ -29,7 +29,11 @@ public class BufferActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .buffer(4)
-                .subscribe(new Observer<List<Integer>>() {
+                .subscribe(
+                        (List<Integer> integers) -> printInts(integers),
+                        (Throwable e) -> {},
+                        () -> {});
+                        /*new Observer<List<Integer>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
@@ -52,8 +56,15 @@ public class BufferActivity extends AppCompatActivity {
                     public void onComplete() {
 
                     }
-                });
+                }*///);
 
+    }
+
+    protected void printInts(List<Integer> integers) {
+        Log.i("TAG", "onNext");
+        for (Integer i: integers) {
+            Log.i("TAG", String.valueOf(i));
+        }
     }
 
     @Override
