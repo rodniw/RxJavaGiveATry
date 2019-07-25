@@ -1,5 +1,6 @@
 package dev.rodni.ru.rxjavamaster;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +11,6 @@ import java.util.ArrayList;
 
 import dev.rodni.ru.rxjavamaster.pojo.Human;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Function;
@@ -19,7 +19,7 @@ import io.reactivex.schedulers.Schedulers;
 
 //in the real world instead of array list of humans its gonna be some
 //data for example from the database or from the rest api
-public class FlatMapActivity extends AppCompatActivity {
+public class ConcatMapActivity extends AppCompatActivity {
 
     private static String TAG = "TAG";
     private Observable<Human> myObservable;
@@ -29,8 +29,6 @@ public class FlatMapActivity extends AppCompatActivity {
     private ArrayList<Human> humans;
 
     private TextView textField;
-    private Human human1;
-    private Human human2;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,18 +47,19 @@ public class FlatMapActivity extends AppCompatActivity {
             emitter.onComplete();
         });
 
-        compDisposable.add(
-                myObservable
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .flatMap((Function<Human, Observable<Human>>) human -> {
-                            human1 = new Human(15, "Vasya", "Mechanic");
-                            human2 = new Human(15, "Mark", "Worker");
+        compDisposable.add(myObserver);
+        myObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                //if order is important use concatMap, if speed then use flatMap
+                .concatMap((Function<Human, Observable<Human>>) human -> {
+                            Human human1 = new Human(15, "Vasya", "Mechanic");
+                            Human human2 = new Human(15, "Mark", "Worker");
                             return Observable.just(human, human1, human2);
                         }
-                        )
-                        .subscribeWith(getObserver())
-        );
+                )
+                .subscribeWith(getObserver());
+
     }
 
     protected DisposableObserver getObserver() {
