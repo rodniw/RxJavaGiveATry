@@ -5,19 +5,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.TextView;
 
 import java.util.List;
 
+import dev.rodni.ru.rxjavamaster.R;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
-public class BufferActivity extends AppCompatActivity {
+public class FilterActivity extends AppCompatActivity {
 
     private static String TAG = "TAG";
 
@@ -27,24 +26,18 @@ public class BufferActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Observable.range(1, 10)
+        Observable.range(1, 20)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .buffer(4)
+                .filter(integer -> integer%3 == 0)
                 .subscribe(
-                        (List<Integer> integers) -> {
-                            printInts(integers);
-                        },
-                        (Throwable e) -> {},
+                        this::printInt,
+                        e -> {},
                         () -> {});
-
     }
 
-    protected void printInts(List<Integer> integers) {
-        Log.i("TAG", "onNext");
-        for (Integer i: integers) {
-            Log.i("TAG", String.valueOf(i));
-        }
+    protected void printInt(int a) {
+        Log.i("TAG", "onNext" + a);
     }
 
     @Override
