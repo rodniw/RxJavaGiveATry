@@ -33,30 +33,6 @@ public class BufferActivity extends AppCompatActivity {
                         (List<Integer> integers) -> printInts(integers),
                         (Throwable e) -> {},
                         () -> {});
-                        /*new Observer<List<Integer>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(List<Integer> integers) {
-                        Log.i("TAG", "onNext");
-                        for (Integer i: integers) {
-                            Log.i("TAG", String.valueOf(i));
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                }*///);
 
     }
 
