@@ -1,1 +1,1 @@
-include ':app', ':rxjavamaster'
+include ':app', ':rxjavamaster', ':todoapp'
