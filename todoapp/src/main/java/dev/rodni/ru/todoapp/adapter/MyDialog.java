@@ -9,11 +9,6 @@ import android.widget.TextView;
 
 import dev.rodni.ru.todoapp.R;
 
-
-/**
- * Created by K. A. ANUSHKA MADUSANKA on 12/29/2017.
- */
-
 public class MyDialog {
 
     private int result = 0;
@@ -30,77 +25,19 @@ public class MyDialog {
         dialogDesc.setText(description);
 
         if (category == 0) {
-
-            dialogButtonCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
-
-            dialogButtonOk.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    dialog.dismiss();
-
-                }
-            });
-
+            dialogButtonCancel.setOnClickListener(v -> dialog.dismiss());
+            dialogButtonOk.setOnClickListener(v -> dialog.dismiss());
             dialog.show();
-
         } else if (category == 1) {
-
             dialogButtonOk.setText("OK");
-
-            dialogButtonCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    dialog.dismiss();
-                }
-            });
-
-
-            dialogButtonOk.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-
-                    dialog.dismiss();
-
-                }
-            });
-
+            dialogButtonCancel.setOnClickListener(v -> dialog.dismiss());
+            dialogButtonOk.setOnClickListener(v -> dialog.dismiss());
             dialog.show();
-
-
         } else if (category == 2) {
-
             dialogButtonOk.setText("OK");
-
-            dialogButtonCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-
-                    dialog.dismiss();
-                }
-            });
-
-
-            dialogButtonOk.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-
-                    dialog.dismiss();
-
-                }
-            });
-
+            dialogButtonCancel.setOnClickListener(v -> dialog.dismiss());
+            dialogButtonOk.setOnClickListener(v -> dialog.dismiss());
             dialog.show();
-
         }
     }
 
@@ -116,21 +53,9 @@ public class MyDialog {
         TextView dialogDesc = dialog.findViewById(R.id.dialog_message);
         dialogDesc.setText(description);
 
-
-        dialogButtonOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                dialog.dismiss();
-
-            }
-        });
-
+        dialogButtonOk.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
-
     }
-
 
     public int openSaveDialog(Context context, String title, String description) {
 
@@ -145,33 +70,11 @@ public class MyDialog {
         TextView dialogDesc = dialog.findViewById(R.id.dialog_message);
         dialogDesc.setText(description);
 
-
-        dialogButtonOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        dialogButtonOk.setOnClickListener(v -> dialog.dismiss());
 
 
-                dialog.dismiss();
-
-
-            }
-        });
-
-
-        dialogCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                dialog.dismiss();
-
-            }
-        });
-
+        dialogCancel.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
-
         return result;
-
     }
-
 }

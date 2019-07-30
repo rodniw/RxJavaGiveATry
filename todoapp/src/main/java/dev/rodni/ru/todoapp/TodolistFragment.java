@@ -30,22 +30,10 @@ import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.MODE_PRIVATE;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link TodolistFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TodolistFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -63,21 +51,9 @@ public class TodolistFragment extends Fragment {
     private View view;
     private TextView searchEditText;
 
-
-
     public TodolistFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TodolistFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static TodolistFragment newInstance(String param1, String param2) {
         TodolistFragment fragment = new TodolistFragment();
         Bundle args = new Bundle();
@@ -102,65 +78,41 @@ public class TodolistFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         view = inflater.inflate(R.layout.fragment_todolist, container, false);
         fabAddNewToDo = view.findViewById(R.id.fab_addNewToDo);
-        searchEditText=view.findViewById(R.id.todo_search);
+        searchEditText = view.findViewById(R.id.todo_search);
 
         recyclerViewAchievingGoals = view.findViewById(R.id.recycler_view_achieving_goals);
 
-
         if (Integer.parseInt(mParam1) == 0) {
-
-
             taskStatus = "Achieving";
             dateFront = "Will be achieved by";
-
         } else {
-
-
             taskStatus = "Achieved";
             dateFront = "Successfully achieved by";
         }
-
 
         //set fab
         fabAddNewToDo.setImageResource(R.drawable.ic_add_white);
         fabAddNewToDo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 if (Integer.parseInt(mParam1) == 0) {
-
                     Intent add_new_intent = new Intent(getContext(), AddToDoActivity.class);
                     add_new_intent.putExtra("status", "Achieving");
                     startActivity(add_new_intent);
-
-
                 } else {
-
                     Intent add_new_intent = new Intent(getContext(), AddToDoActivity.class);
                     add_new_intent.putExtra("status", "Achieved");
                     startActivity(add_new_intent);
-
                 }
-
-
             }
         });
-
-
         setRecyclerView();
         loadData();
 
-
-
-
-
         return view;
-
     }
 
     @Override
@@ -180,23 +132,11 @@ public class TodolistFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
     private void setRecyclerView() {
-
 
         goalAdapter = new ToDoListAdapter(goalsList, 0, TodolistFragment.this);
 
@@ -207,41 +147,26 @@ public class TodolistFragment extends Fragment {
         recyclerViewAchievingGoals.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerViewAchievingGoals, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-
                 ToDoListItem goal = goalsList.get(position);
                 SharedPreferences.Editor editor = getActivity().getSharedPreferences("goal_related_data", MODE_PRIVATE).edit();
                 editor.putString("goal_id", Integer.toString(goal.getToDoListItemId()));
                 editor.putString("status", "0");
                 editor.commit();
-
             }
-
             @Override
             public void onLongClick(View view, int position) {
-
             }
         }));
 
         recyclerViewAchievingGoals.setAdapter(goalAdapter);
-
-
     }
 
     private void loadData() {
-
-
-
-
-
     }
-
 
     public void markAsAchieved(int position) {
 
-
         if (Integer.parseInt(mParam1) == 0) {
-
-
             ToDoListItem goal = goalsList.get(position);
             goal.setToDoListItemStatus("Achieved");
             toDoDataManager.updateToDoListItem(goal);
@@ -250,10 +175,7 @@ public class TodolistFragment extends Fragment {
             goalAdapter.notifyDataSetChanged();
 
             Toast.makeText(getActivity(), "Marked as achieved", Toast.LENGTH_LONG).show();
-
         } else {
-
-
             ToDoListItem goal = goalsList.get(position);
             goal.setToDoListItemStatus("Achieving");
             toDoDataManager.updateToDoListItem(goal);
@@ -263,48 +185,33 @@ public class TodolistFragment extends Fragment {
 
             Toast.makeText(getActivity(), "Marked as not achieved", Toast.LENGTH_LONG).show();
         }
-
-
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-
-
             if (recyclerViewAchievingGoals != null) {
                 goalsList.clear();
                 setRecyclerView();
                 loadData();
-
             }
-
         }
     }
 
     public void viewListWithButtons(int position) {
-
-
         ToDoListItem goal = goalsList.get(position);
         goal.setToDoListItemBackgroundColor("1");
         goalAdapter.notifyItemChanged(position);
-
-
     }
 
     public void closeButtonsRow(int position) {
-
-
         ToDoListItem goal = goalsList.get(position);
         goal.setToDoListItemBackgroundColor("0");
         goalAdapter.notifyItemChanged(position);
-
-
     }
 
     public void deleteRow(int position) {
-
         final int selctedPosition = position;
 
         final Dialog dialog = new Dialog(getActivity());
@@ -330,7 +237,6 @@ public class TodolistFragment extends Fragment {
         dialogButtonOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 ToDoListItem goal = goalsList.get(selctedPosition);
                 toDoDataManager.deleteToDoListItem(goal);
                 goalsList.remove(selctedPosition);
@@ -339,22 +245,15 @@ public class TodolistFragment extends Fragment {
                 Toast.makeText(getActivity(), "Deleted successfully", Toast.LENGTH_LONG).show();
             }
         });
-
         dialog.show();
-
     }
 
     public void viewUpdateFragment(int position) {
-
         ToDoListItem goal = goalsList.get(position);
         String content = goal.getToDoListItemName();
 
         FragmentManager oFragmentManager = getActivity().getSupportFragmentManager();
         UpdateToDoFragment updateTasksFragment = UpdateToDoFragment.newInstance(content, 0, TodolistFragment.this, goal);
         updateTasksFragment.show(oFragmentManager, "Sample Fragment");
-
     }
-
-
-
 }

@@ -25,17 +25,12 @@ import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
-/**
- * Created by K. A. ANUSHKA MADUSANKA on 12/10/2017.
- */
-
 public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.MyViewHolder> implements Filterable {
     private List<ToDoListItem> todolist;
     private List<ToDoListItem> todolistFiltered;
     private int type;
     private int goal_category_id;
     public TodolistFragment todoFragment;
-
 
     public ToDoListAdapter(List<ToDoListItem> toDoListItems, int type, Fragment fragment) {
 
@@ -44,13 +39,10 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.MyView
         this.type = type;
         this.todoFragment = (TodolistFragment) fragment;
 
-
     }
-
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
 
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_goallist_list_item, parent, false);
         SharedPreferences prefs = parent.getContext().getSharedPreferences("BackTarget", MODE_PRIVATE);
@@ -61,34 +53,17 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.MyView
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-
         ToDoListItem item = todolistFiltered.get(position);
         holder.name.setText(item.getToDoListItemName());
-
-
         holder.date.setText(item.getToDoListItemDescription());
-
-
         if (item.getToDoListItemBackgroundColor() != null) {
-
             if (Integer.parseInt(item.getToDoListItemBackgroundColor()) == 1) {
-
-
                 holder.buttonsLayout.setVisibility(View.VISIBLE);
-
-
             } else {
-
                 holder.buttonsLayout.setVisibility(View.INVISIBLE);
-
             }
-
         } else {
-
-
         }
-
-
     }
 
     @Override
@@ -129,7 +104,6 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.MyView
         };
     }
 
-
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView name, date;
         public ImageButton achievedButton;
@@ -155,48 +129,21 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.MyView
             deleteButton.setOnClickListener(this);
             editButton.setOnClickListener(this);
             name.setOnClickListener(this);
-
-
         }
-
 
         @Override
         public void onClick(View v) {
-
             if (v == button) {
-
-
                 todoFragment.markAsAchieved(getAdapterPosition());
-
-
             } else if (v == deleteButton) {
-
-
                 todoFragment.deleteRow(getAdapterPosition());
-
-
             } else if (v == closeButton) {
-
-
                 todoFragment.closeButtonsRow(getAdapterPosition());
-
-
             } else if (v == editButton) {
-
-
                 todoFragment.viewUpdateFragment(getAdapterPosition());
-
-
             } else {
-
-
                 todoFragment.viewListWithButtons(getAdapterPosition());
-
-
             }
-
         }
     }
-
-
 }

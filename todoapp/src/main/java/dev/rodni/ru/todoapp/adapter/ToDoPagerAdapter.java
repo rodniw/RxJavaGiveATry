@@ -6,11 +6,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import dev.rodni.ru.todoapp.TodolistFragment;
 
-
-/**
- * Created by K. A. ANUSHKA MADUSANKA on 4/12/2017.
- */
-
 public class ToDoPagerAdapter extends FragmentStatePagerAdapter {
     int mNumOfTabs;
 
@@ -24,11 +19,9 @@ public class ToDoPagerAdapter extends FragmentStatePagerAdapter {
         //returns to do list views
         switch (position) {
             case 0:
-
                 TodolistFragment todolistFragment1=TodolistFragment.newInstance("0","to do tasks");
                 return todolistFragment1;
             case 1:
-
                 TodolistFragment todolistFragment2=TodolistFragment.newInstance("1","done tasks");
                 return todolistFragment2;
             default:

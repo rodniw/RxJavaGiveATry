@@ -1,9 +1,5 @@
 package dev.rodni.ru.todoapp.data;
 
-/**
- * Created by K . A. Anushka Madusanka on 12/12/2017.
- */
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -12,17 +8,11 @@ import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-
     private static final int DATABASE_VERSION = 1;
-
     // Database Name
     private static final String DATABASE_NAME = "db_todo";
-
-
     // ToDoListItem_list table name
     private static final String TABLE_ToDoListItem_LIST = "ToDoListItem_list";
-
-
     // ToDoListItem_list Table Columns names
     private static final String KEY_ToDoListItem_LIST_NAMES_LIST_ID = "ToDoListItem_list_id";
     private static final String KEY_ToDoListItem_LIST_NAME = "ToDoListItem_list_name";
@@ -36,14 +26,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ToDoListItem_LIST_ITEM_STATUS = "ToDoListItem_list_item_status";
     private static final String KEY_ToDo_Id = "ToDo_id";
 
-
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
 
         //Create ToDoListItem_list table
         String CREATE_ToDoS_LIST_ITEMS_TABLE = "CREATE TABLE " + TABLE_ToDoListItem_LIST + "("
@@ -59,21 +47,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_ToDoListItem_LIST_ITEM_STATUS + " TEXT,"
                 + KEY_ToDo_Id + " INTEGER" + ")";
         db.execSQL(CREATE_ToDoS_LIST_ITEMS_TABLE);
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
         // Drop older table if existed
-
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ToDoListItem_LIST);
-
         // Create tables again
         onCreate(db);
-
     }
-
-
 }
 

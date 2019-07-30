@@ -47,7 +47,6 @@ public class AddToDoActivity extends AppCompatActivity {
 
     private ToDoDataManager dbManager;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,11 +54,8 @@ public class AddToDoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-        //  getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         goalStatus = getIntent().getStringExtra("status");
 
         dbManager = new ToDoDataManager(this);
@@ -68,7 +64,6 @@ public class AddToDoActivity extends AppCompatActivity {
         calendar = Calendar.getInstance();
         mdformat = new SimpleDateFormat("yyyy / MM / dd ");
         currentDate = mdformat.format(calendar.getTime());
-
 
         // Get Current Date
         final Calendar c = Calendar.getInstance();
@@ -79,23 +74,14 @@ public class AddToDoActivity extends AppCompatActivity {
 
         //set date to the right format
         if (correctMonthint < 10 && mDay < 10) {
-
             date = mYear + " / " + "0" + correctMonthint + " / " + "0" + mDay;
-
         } else if (correctMonthint < 10 && mDay >= 10) {
-
             date = mYear + " / " + "0" + correctMonthint + " / " + mDay;
-
         } else if (correctMonthint >= 10 && mDay < 10) {
-
             date = mYear + " / " + correctMonthint + " / " + "0" + mDay;
-
-
         } else {
-
             date = mYear + " / " + correctMonthint + " / " + mDay;
         }
-
 
         rangeTextView = (TextView) findViewById(R.id.tvRange);
         reminderTextView = (TextView) findViewById(R.id.tvReminder);
@@ -105,101 +91,57 @@ public class AddToDoActivity extends AppCompatActivity {
 
         closeImageButton = (ImageButton) findViewById(R.id.imageButtonClose);
 
-        closeImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(AddToDoActivity.this, ToDoMainActivity.class);
-
-                startActivity(intent);
-
-            }
+        closeImageButton.setOnClickListener(v -> {
+            Intent intent = new Intent(AddToDoActivity.this, ToDoMainActivity.class);
+            startActivity(intent);
         });
-
 
         goalContent = (MaterialEditText) findViewById(R.id.etTask);
 
-
         clearImageButton = (ImageButton) findViewById(R.id.imageButtonClear);
 
-        clearImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                goalContent.setText(" ");
-            }
-        });
+        clearImageButton.setOnClickListener(v -> goalContent.setText(" "));
 
 
         setTimeImageButton = (ImageButton) findViewById(R.id.imageButtonTimeRange);
 
-        setTimeImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                viewDatePickerDialog();
-            }
-        });
+        setTimeImageButton.setOnClickListener(v -> viewDatePickerDialog());
 
 
         saveImageButton = (ImageButton) findViewById(R.id.imageButtonSave);
 
-        saveImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (String.valueOf(goalContent.getText().toString()).equals("")) {
-
-
-                    new MyDialog().openConfirmDialog(AddToDoActivity.this, "Empty field", "Please, add a content");
-
-
-                }
-                if (false) {
-
-
-                    new MyDialog().openConfirmDialog(AddToDoActivity.this, "Empty field", "Please, set the time");
-
-
-                } else {
-
-
-                    if (calendarForReminder != null) {
-
-                        setAlarm(calendarForReminder);
-
-
-                    }
-
-                    dbManager.addToDoListItem(new ToDoListItem(
-                            goalContent.getText().toString(),
-                            "desc",
-                            currentDate,
-                            currentDate,
-                            goalStatus,
-                            date,
-                            goalCategoryId));
-
-                    Intent main = new Intent(AddToDoActivity.this, ToDoMainActivity.class)
-                            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                    main.putExtra("result", "1");
-                    //dialog.dismiss();
-                    startActivity(main);
-
+        saveImageButton.setOnClickListener(v -> {
+            if (String.valueOf(goalContent.getText().toString()).equals("")) {
+                new MyDialog().openConfirmDialog(AddToDoActivity.this, "Empty field", "Please, add a content");
+            }
+            if (false) {
+                new MyDialog().openConfirmDialog(AddToDoActivity.this, "Empty field", "Please, set the time");
+            } else {
+                if (calendarForReminder != null) {
+                    setAlarm(calendarForReminder);
                 }
 
+                dbManager.addToDoListItem(new ToDoListItem(
+                        goalContent.getText().toString(),
+                        "desc",
+                        currentDate,
+                        currentDate,
+                        goalStatus,
+                        date,
+                        goalCategoryId));
+
+                Intent main = new Intent(AddToDoActivity.this, ToDoMainActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                main.putExtra("result", "1");
+                //dialog.dismiss();
+                startActivity(main);
             }
         });
-
-
     }
-
 
     private void setAlarm(Calendar targetCal) {
-
-
     }
-
 
     private void viewDatePickerDialog() {
 
@@ -209,54 +151,33 @@ public class AddToDoActivity extends AppCompatActivity {
         mMonth = c.get(Calendar.MONTH);
         mDay = c.get(Calendar.DAY_OF_MONTH);
 
-
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
+                (view, year, monthOfYear, dayOfMonth) -> {
+                    // targetedDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                    mYear = year;
 
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
+                    mMonth = monthOfYear + 1;
 
-                        // targetedDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                    mDay = dayOfMonth;
 
-                        mYear = year;
-
-
-                        mMonth = monthOfYear + 1;
-
-                        mDay = dayOfMonth;
-
-                        if (mMonth < 10 && mDay < 10) {
-
-                            date = mYear + " / " + "0" + mMonth + " / " + "0" + mDay;
-
-                        } else if (mMonth < 10 && mDay >= 10) {
-
-                            date = mYear + " / " + "0" + mMonth + " / " + mDay;
-
-                        } else if (mMonth >= 10 && mDay < 10) {
-
-                            date = mYear + " / " + mMonth + " / " + "0" + mDay;
-
-
-                        } else {
-
-                            date = mYear + " / " + mMonth + " / " + mDay;
-                        }
-
-                        Log.i("datebug", "came here" + date + "  year  " + mYear + " month  " + mMonth + " day " + " " + mDay);
-
-                        rangeTextView.setText(date);
-                        setTimeImageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_clock));
-                        saveImageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_save));
-                        horizontalView.setVisibility(View.VISIBLE);
-
-
+                    if (mMonth < 10 && mDay < 10) {
+                        date = mYear + " / " + "0" + mMonth + " / " + "0" + mDay;
+                    } else if (mMonth < 10 && mDay >= 10) {
+                        date = mYear + " / " + "0" + mMonth + " / " + mDay;
+                    } else if (mMonth >= 10 && mDay < 10) {
+                        date = mYear + " / " + mMonth + " / " + "0" + mDay;
+                    } else {
+                        date = mYear + " / " + mMonth + " / " + mDay;
                     }
+
+                    Log.i("datebug", "came here" + date + "  year  " + mYear + " month  " + mMonth + " day " + " " + mDay);
+
+                    rangeTextView.setText(date);
+                    setTimeImageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_clock));
+                    saveImageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_save));
+                    horizontalView.setVisibility(View.VISIBLE);
+
                 }, mYear, mMonth, mDay);
         datePickerDialog.show();
-
-
     }
-
 }

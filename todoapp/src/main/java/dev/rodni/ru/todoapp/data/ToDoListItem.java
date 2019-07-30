@@ -1,11 +1,6 @@
 package dev.rodni.ru.todoapp.data;
 
-/**
- * Created by K. A. ANUSHKA MADUSANKA on 12/12/2017.
- */
-
 public class ToDoListItem {
-
 
     private int toDoListItemId;
 
@@ -47,7 +42,6 @@ public class ToDoListItem {
         this.toDoListItemCreatedDate = toDoListItemCreatedDate;
         this.toDoListItemLatUpdatedDate = toDoListItemLatUpdatedDate;
         this.toDoListItemPlanedAchievDate = toDoListItemPlanedAchievDate;
-
         this.toDoListItemStatus = toDoListItemStatus;
         this.goalId = goalId;
     }

@@ -1,5 +1,6 @@
 package dev.rodni.ru.todoapp.data;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,12 +13,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * Created by K. A. ANUSHKA MADUSANKA on 12/12/2017.
- */
-
 public class ToDoDataManager {
-
 
     private DatabaseHandler databaseHelper;
 
@@ -51,18 +47,14 @@ public class ToDoDataManager {
         return this;
     }
 
-
     // Adding new ToDoListItem
     public void addToDoListItem(ToDoListItem ToDoListItem) {
-
-
         // Get Current Date
         final Calendar c = Calendar.getInstance();
         int mYear = c.get(Calendar.YEAR);
         int mMonth = c.get(Calendar.MONTH);
         int mDay = c.get(Calendar.DAY_OF_MONTH);
         String lastUpdatedDate = mYear + "/" + mMonth + "/" + mDay;
-
 
         ContentValues values = new ContentValues();
         values.put(KEY_ToDoListItem_LIST_NAME, ToDoListItem.getToDoListItemName()); // ToDoListItem Name
@@ -72,15 +64,10 @@ public class ToDoDataManager {
         values.put(KEY_ToDoListItem_LIST_ITEM_STATUS, ToDoListItem.getToDoListItemStatus()); // ToDoListItem status
         values.put(KEY_ToDoListItem_LIST_LAST_UPDATED, lastUpdatedDate); // ToDoListItem last updated
         values.put(KEY_ToDo_Id, ToDoListItem.getGoalId());
-
-
         // Inserting Row
         database.insert(TABLE_ToDoListItem_LIST, null, values);
-
        // database.close();
-
     }
-
 
     // Getting All ToDoListItem_list
     public ArrayList<ToDoListItem> getAllToDoListItem_list() {
@@ -88,8 +75,7 @@ public class ToDoDataManager {
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_ToDoListItem_LIST;
 
-
-        Cursor cursor = database.rawQuery(selectQuery, null);
+        @SuppressLint("Recycle") Cursor cursor = database.rawQuery(selectQuery, null);
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -111,12 +97,10 @@ public class ToDoDataManager {
                 ToDoListItemList.add(ToDoListItem);
             } while (cursor.moveToNext());
         }
-
       //  cursor.close();
         // return ToDoListItem list
         return sortByDate(ToDoListItemList);
     }
-
 
     // Updating single ToDoListItem
     public int updateToDoListItem(ToDoListItem ToDoListItem) {
@@ -134,10 +118,7 @@ public class ToDoDataManager {
                 new String[]{String.valueOf(ToDoListItem.getToDoListItemId())});
 
       //  database.close();
-
         return result;
-
-
     }
 
     // Deleting single ToDoListItem
@@ -148,28 +129,18 @@ public class ToDoDataManager {
        // database.close();
     }
 
-
     private ArrayList<ToDoListItem> sortByDate(ArrayList<ToDoListItem> goalsToSort) {
-
 
         ArrayList<ToDoListItem> sorted_goals_by_date = new ArrayList<>();
 
-
         for (ToDoListItem goal : goalsToSort) {
-
             String date = goal.getToDoListItemPlanedAchievDate();
             if (date != null) {
-
                 sorted_goals_by_date.add(goal);
-
             }
-
-
         }
 
-
         for (ToDoListItem goal : sorted_goals_by_date) {
-
             String date = goal.getToDoListItemPlanedAchievDate();
             if (date != null) {
                 String year = date.substring(0, 4);
@@ -179,27 +150,15 @@ public class ToDoDataManager {
                 String dayMerged = year + month + day;
            //     int dayInt = Integer.parseInt(dayMerged);
                 goal.setToDoListItemMoreInfo(dayMerged);
-
             } else {
-
             }
-
-
         }
-
 
         Collections.sort(sorted_goals_by_date, new Comparator<ToDoListItem>() {
             public int compare(ToDoListItem obj1, ToDoListItem obj2) {
-
                 return Integer.valueOf(Integer.parseInt(obj1.getToDoListItemMoreInfo())).compareTo(Integer.parseInt(obj2.getToDoListItemMoreInfo())); // To compare integer values
-
-
             }
         });
         return sorted_goals_by_date;
-
-
     }
-
-
 }
