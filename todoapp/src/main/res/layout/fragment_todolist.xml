@@ -8,9 +8,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".TodolistFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
-
     <View
         android:id="@+id/border_goals"
         android:layout_width="match_parent"
@@ -30,7 +27,6 @@
         android:hint="@string/hint_search"
         android:paddingBottom="10dp" />
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_achieving_goals"
         android:layout_width="match_parent"
@@ -45,9 +41,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/fab_margin"
-
-
         app:srcCompat="@android:drawable/ic_menu_send" />
-
 
 </RelativeLayout>

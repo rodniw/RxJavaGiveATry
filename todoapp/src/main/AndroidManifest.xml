@@ -11,13 +11,24 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ToDoMainActivity"
-            android:screenOrientation="portrait">
+        <activity
+            android:name=".ToDoMainActivity"
+            android:label="@string/title_activity_to_do_main"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".AddToDoActivity"
+            android:label="@string/title_activity_material_add_goal"
+            android:parentActivityName=".ToDoMainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ToDoMainActivity" />
         </activity>
     </application>
 

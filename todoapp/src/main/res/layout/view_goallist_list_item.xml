@@ -15,7 +15,6 @@
     android:paddingTop="10dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-
     <TextView
         android:id="@+id/tvGoallistName"
         android:layout_width="match_parent"
@@ -44,50 +43,39 @@
         android:layout_alignParentRight="true"
         android:layout_marginLeft="5dp"
         android:padding="3dp"
-
         android:visibility="gone"
         app:srcCompat="@drawable/ic_action_list" />
 
-
     <LinearLayout
-
         android:id="@+id/tasklistbuttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:background="@color/apple_green"
-
         android:orientation="horizontal"
-
-        android:visibility="gone"
-
-        >
+        android:visibility="gone">
 
         <Space
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-
             android:layout_weight="1" />
 
         <ImageButton
             android:id="@+id/imageButtonClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             app:srcCompat="@drawable/ic_close" />
 
         <Space
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-
             android:layout_weight="1" />
 
         <ImageButton
             android:id="@+id/imageButtonDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             app:srcCompat="@drawable/ic_trash_row" />
 
         <Space
@@ -99,7 +87,6 @@
             android:id="@+id/imageButtonEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             app:srcCompat="@drawable/ic_action_edit_row" />
 
         <Space
@@ -107,13 +94,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
-
         <ImageButton
-
             android:id="@+id/imageButtonMarkAsDone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             app:srcCompat="@drawable/ic_action_done_circle" />
 
         <Space
@@ -121,8 +105,5 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1" />
-
     </LinearLayout>
-
-
 </RelativeLayout>
