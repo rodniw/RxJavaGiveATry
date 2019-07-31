@@ -1,5 +1,6 @@
 package dev.rodni.ru.todoapp;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,8 +19,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.jakewharton.rxbinding3.widget.RxTextView;
+import com.jakewharton.rxbinding3.widget.TextViewTextChangeEvent;
+
 import dev.rodni.ru.todoapp.adapter.ToDoListAdapter;
 import dev.rodni.ru.todoapp.adapter.RecyclerTouchListener;
 import dev.rodni.ru.todoapp.data.ToDoListItem;
@@ -27,6 +33,7 @@ import dev.rodni.ru.todoapp.data.ToDoDataManager;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
@@ -57,7 +64,7 @@ public class TodolistFragment extends Fragment {
     private ToDoListAdapter goalAdapter;
 
     private View view;
-    private TextView searchEditText;
+    private EditText searchEditText;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -85,6 +92,7 @@ public class TodolistFragment extends Fragment {
         toDoDataManager.open();
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -119,6 +127,32 @@ public class TodolistFragment extends Fragment {
                 }
             }
         });
+
+        compositeDisposable.add(
+        RxTextView.textChangeEvents(searchEditText)
+                .skipInitialValue()
+                .debounce(300, TimeUnit.MILLISECONDS)
+                .distinctUntilChanged()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<TextViewTextChangeEvent>() {
+                    @Override
+                    public void onNext(TextViewTextChangeEvent textViewTextChangeEvent) {
+                        goalAdapter.getFilter().filter(textViewTextChangeEvent.getText());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                })
+        );
+
         setRecyclerView();
         loadData();
 

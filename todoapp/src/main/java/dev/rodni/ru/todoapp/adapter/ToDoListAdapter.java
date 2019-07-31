@@ -82,15 +82,12 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.MyView
                 } else {
                     List<ToDoListItem> filteredList = new ArrayList<>();
                     for (ToDoListItem item : todolist) {
-
                         if (item.getToDoListItemName().toLowerCase().contains(charString.toLowerCase())) {
                             filteredList.add(item);
                         }
                     }
-
                     todolistFiltered = filteredList;
                 }
-
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = todolistFiltered;
                 return filterResults;
