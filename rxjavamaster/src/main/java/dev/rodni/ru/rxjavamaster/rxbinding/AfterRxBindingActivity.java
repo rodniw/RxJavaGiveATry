@@ -41,12 +41,9 @@ public class AfterRxBindingActivity extends AppCompatActivity {
                 });
 
         disposableButton = RxView.clicks(button)
-                .subscribe(new Consumer<Unit>() {
-                    @Override
-                    public void accept(Unit unit) throws Exception {
-                        textView.setText("");
-                        editText.setText("");
-                    }
+                .subscribe(unit -> {
+                    textView.setText("");
+                    editText.setText("");
                 });
     }
 }
