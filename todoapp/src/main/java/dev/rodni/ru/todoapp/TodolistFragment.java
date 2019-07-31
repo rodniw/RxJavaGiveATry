@@ -24,6 +24,14 @@ import dev.rodni.ru.todoapp.adapter.ToDoListAdapter;
 import dev.rodni.ru.todoapp.adapter.RecyclerTouchListener;
 import dev.rodni.ru.todoapp.data.ToDoListItem;
 import dev.rodni.ru.todoapp.data.ToDoDataManager;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -50,6 +58,8 @@ public class TodolistFragment extends Fragment {
 
     private View view;
     private TextView searchEditText;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public TodolistFragment() {
     }
@@ -162,6 +172,35 @@ public class TodolistFragment extends Fragment {
     }
 
     private void loadData() {
+
+        
+        compositeDisposable.add(
+                Observable
+                        .fromIterable(toDoDataManager.getAllToDoListItem_list())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .filter(toDoListItem -> toDoListItem.getToDoListItemStatus().equals(taskStatus))
+                        .map(toDoListItem -> {
+                            toDoListItem.setToDoListItemDescription(dateFront + toDoListItem.getToDoListItemAchievedDate());
+                            return toDoListItem;
+                        })
+                        .subscribeWith(new DisposableObserver<ToDoListItem>() {
+                            @Override
+                            public void onNext(ToDoListItem toDoListItem) {
+                                goalsList.add(toDoListItem);
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+
+
+                            }
+                            @Override
+                            public void onComplete() {
+                                goalAdapter.notifyDataSetChanged();
+                            }
+                        })
+        );
+
     }
 
     public void markAsAchieved(int position) {
@@ -255,5 +294,12 @@ public class TodolistFragment extends Fragment {
         FragmentManager oFragmentManager = getActivity().getSupportFragmentManager();
         UpdateToDoFragment updateTasksFragment = UpdateToDoFragment.newInstance(content, 0, TodolistFragment.this, goal);
         updateTasksFragment.show(oFragmentManager, "Sample Fragment");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        compositeDisposable.clear();
     }
 }
