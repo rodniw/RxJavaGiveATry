@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TMDBMovieApp</string>
+    <string name="app_title">Популярные фильмы</string>
+    <string name="api_key">301bd755088008578bec0a5f37c84cf1</string>
 </resources>
