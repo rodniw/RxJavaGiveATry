@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().setTitle(getString(R.string.app_title));
+        getPopularMovies();
 
         swipeContainer = findViewById(R.id.swipe_layout);
         swipeContainer.setColorSchemeResources(R.color.colorPrimary);
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 if (dbResponse != null && dbResponse.getMovies() != null) {
                     movies = (ArrayList<Movie>) dbResponse.getMovies();
                     init();
+                    swipeContainer.getProgressViewEndOffset();
                 }
             }
             @Override
