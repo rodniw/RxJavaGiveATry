@@ -18,6 +18,15 @@ import dev.rodni.ru.tmdbmovieapp.api.RetrofitInstance;
 import dev.rodni.ru.tmdbmovieapp.entity.Movie;
 import dev.rodni.ru.tmdbmovieapp.entity.MovieDBResponse;
 import dev.rodni.ru.tmdbmovieapp.view.adapter.MovieAdapter;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.SingleSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,14 +39,17 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeContainer;
 
     private MoviesDataService api;
-    private MovieDBResponse dbResponse;
-    private Call<MovieDBResponse> call;
+    //private MovieDBResponse dbResponse;
+    //private Call<MovieDBResponse> call;
+    private Single<MovieDBResponse> singleCall;
+    private CompositeDisposable compositeDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        compositeDisposable = new CompositeDisposable();
         getSupportActionBar().setTitle(getString(R.string.app_title));
         getPopularMovies();
 
@@ -51,29 +63,26 @@ public class MainActivity extends AppCompatActivity {
 
         api = RetrofitInstance.getService();
 
-        call = api.getPopularMovies(getString(R.string.api_key));
+        singleCall = api.getPopularMovies(getString(R.string.api_key));
 
-        call.enqueue(new Callback<MovieDBResponse>() {
-            @Override
-            public void onResponse(Call<MovieDBResponse> call, Response<MovieDBResponse> response) {
-                dbResponse = response.body();
-                if (dbResponse != null && dbResponse.getMovies() != null) {
-                    movies = (ArrayList<Movie>) dbResponse.getMovies();
-                    init();
-                    swipeContainer.getProgressViewEndOffset();
-                }
-            }
-            @Override
-            public void onFailure(Call<MovieDBResponse> call, Throwable t) {
-                if (t instanceof SocketTimeoutException) {
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "Socket Time out.",
-                            Toast.LENGTH_LONG)
-                            .show();
-                }
-            }
-        });
+        compositeDisposable.add(
+                singleCall
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<MovieDBResponse>() {
+                            @Override
+                            public void onSuccess(MovieDBResponse movieDBResponse) {
+                                movies.addAll(movieDBResponse.getMovies());
+                                init();
+                                hideSwipe();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+                        })
+        );
     }
 
     public void init() {
@@ -91,13 +100,13 @@ public class MainActivity extends AppCompatActivity {
         movieAdapter.notifyDataSetChanged();
     }
 
+    private void hideSwipe() {
+        swipeContainer.setRefreshing(false);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (call != null) {
-            if (call.isExecuted()) {
-                call.cancel();
-            }
-        }
+        compositeDisposable.clear();
     }
 }
