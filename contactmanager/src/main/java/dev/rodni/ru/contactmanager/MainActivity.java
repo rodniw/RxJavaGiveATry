@@ -1,5 +1,6 @@
 package dev.rodni.ru.contactmanager;
 
+import android.annotation.SuppressLint;
 import android.arch.persistence.room.Room;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -23,32 +24,52 @@ import java.util.ArrayList;
 import dev.rodni.ru.contactmanager.adapter.ContactsAdapter;
 import dev.rodni.ru.contactmanager.db.ContactsAppDatabase;
 import dev.rodni.ru.contactmanager.db.entity.Contact;
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Action;
+import io.reactivex.observers.DisposableCompletableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
     private ContactsAdapter contactsAdapter;
     private ArrayList<Contact> contactArrayList = new ArrayList<>();
+    private Contact contact;
     private RecyclerView recyclerView;
     private ContactsAppDatabase contactsAppDatabase;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(" Contacts Manager ");
+        getSupportActionBar().setTitle("Contacts Manager");
 
         recyclerView = findViewById(R.id.recycler_view_contacts);
         contactsAppDatabase= Room.databaseBuilder(getApplicationContext(),ContactsAppDatabase.class,"ContactDB").allowMainThreadQueries().build();
-
-        contactArrayList.addAll(contactsAppDatabase.getContactDAO().getContacts());
 
         contactsAdapter = new ContactsAdapter(this, contactArrayList, MainActivity.this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(contactsAdapter);
+
+        compositeDisposable.add(
+                contactsAppDatabase.getContactDAO().getContacts()
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(contacts -> {
+                            contactArrayList.clear();
+                            contactArrayList.addAll(contacts);
+                            contactsAdapter.notifyDataSetChanged();
+                        }, throwable -> {
+
+                        })
+        );
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> addAndEditContacts(false, null, -1));
@@ -114,42 +135,52 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (isUpdate && contact != null) {
-
                 updateContact(newContact.getText().toString(), contactEmail.getText().toString(), position);
             } else {
-
                 createContact(newContact.getText().toString(), contactEmail.getText().toString());
             }
         });
     }
 
     private void deleteContact(Contact contact, int position) {
-        contactArrayList.remove(position);
         contactsAppDatabase.getContactDAO().deleteContact(contact);
-        contactsAdapter.notifyDataSetChanged();
     }
 
     private void updateContact(String name, String email, int position) {
-        Contact contact = contactArrayList.get(position);
+        contact = contactArrayList.get(position);
 
         contact.setName(name);
         contact.setEmail(email);
 
         contactsAppDatabase.getContactDAO().updateContact(contact);
-
-        contactArrayList.set(position, contact);
-
-        contactsAdapter.notifyDataSetChanged();
     }
+
 
     private void createContact(String name, String email) {
-        long id = contactsAppDatabase.getContactDAO().addContact(new Contact(0,name, email));
+        //this long id return number of rows
+        Completable.fromAction(() -> {
+            long id = contactsAppDatabase.getContactDAO().addContact(new Contact(0,name, email));
+        })
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeWith(new DisposableCompletableObserver() {
+            @Override
+            public void onComplete() {
 
-        Contact contact = contactsAppDatabase.getContactDAO().getContact(id);
+            }
+            @Override
+            public void onError(Throwable e) {
 
-        if (contact != null) {
-            contactArrayList.add(0, contact);
-            contactsAdapter.notifyDataSetChanged();
-        }
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.clear();
     }
 }
+
+//after using room with rx we can delete all notifies method from crud operations
+//because we always listening to all the changes already

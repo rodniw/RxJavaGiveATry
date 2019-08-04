@@ -7,14 +7,14 @@ import android.arch.persistence.room.PrimaryKey;
 
 @Entity(tableName = "contacts")
 public class Contact {
-    @ColumnInfo(name="contact_name")
+    @ColumnInfo(name = "contact_name")
     private String name;
 
-    @ColumnInfo(name="contact_email")
+    @ColumnInfo(name  ="contact_email")
     private String email;
 
-    @ColumnInfo(name="contact_id")
-    @PrimaryKey(autoGenerate =true)
+    @ColumnInfo(name = "contact_id")
+    @PrimaryKey(autoGenerate = true)
     private long id;
 
     @Ignore

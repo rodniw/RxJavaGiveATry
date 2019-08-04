@@ -9,6 +9,7 @@ import android.arch.persistence.room.Update;
 import java.util.List;
 
 import dev.rodni.ru.contactmanager.db.entity.Contact;
+import io.reactivex.Flowable;
 
 @Dao
 public interface ContactDAO {
@@ -22,8 +23,8 @@ public interface ContactDAO {
     void deleteContact(Contact contact);
 
     @Query("select * from contacts")
-    List<Contact> getContacts();
+    Flowable<List<Contact>> getContacts();
 
-    @Query("select * from contacts where contact_id ==:contactId")
+    @Query("select * from contacts where contact_id == :contactId")
     Contact getContact(long contactId);
 }
