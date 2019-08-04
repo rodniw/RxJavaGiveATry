@@ -1,15 +1,13 @@
 package dev.rodni.ru.tmdbmovieapp.view;
 
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 import dev.rodni.ru.tmdbmovieapp.R;
@@ -18,18 +16,11 @@ import dev.rodni.ru.tmdbmovieapp.api.RetrofitInstance;
 import dev.rodni.ru.tmdbmovieapp.entity.Movie;
 import dev.rodni.ru.tmdbmovieapp.entity.MovieDBResponse;
 import dev.rodni.ru.tmdbmovieapp.view.adapter.MovieAdapter;
-import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,1 +1,1 @@
-include ':app', ':rxjavamaster', ':todoapp', ':rxjavawithretrofit', ':tmdbmovieapp'
+include ':app', ':rxjavamaster', ':todoapp', ':rxjavawithretrofit', ':tmdbmovieapp', ':contactmanager'
