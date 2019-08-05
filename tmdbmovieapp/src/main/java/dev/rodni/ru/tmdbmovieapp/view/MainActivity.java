@@ -1,5 +1,6 @@
 package dev.rodni.ru.tmdbmovieapp.view;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,16 +12,9 @@ import android.support.v7.widget.RecyclerView;
 import java.util.ArrayList;
 
 import dev.rodni.ru.tmdbmovieapp.R;
-import dev.rodni.ru.tmdbmovieapp.api.MoviesDataService;
-import dev.rodni.ru.tmdbmovieapp.api.RetrofitInstance;
 import dev.rodni.ru.tmdbmovieapp.entity.Movie;
-import dev.rodni.ru.tmdbmovieapp.entity.MovieDBResponse;
 import dev.rodni.ru.tmdbmovieapp.view.adapter.MovieAdapter;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.observers.DisposableSingleObserver;
-import io.reactivex.schedulers.Schedulers;
+import dev.rodni.ru.tmdbmovieapp.view.viewmodel.MainActivityViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,52 +22,30 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
     private SwipeRefreshLayout swipeContainer;
-
-    private MoviesDataService api;
-    //private MovieDBResponse dbResponse;
-    //private Call<MovieDBResponse> call;
-    private Single<MovieDBResponse> singleCall;
-    private CompositeDisposable compositeDisposable;
+    private MainActivityViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        compositeDisposable = new CompositeDisposable();
+        viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+
         getSupportActionBar().setTitle(getString(R.string.app_title));
-        getPopularMovies();
 
         swipeContainer = findViewById(R.id.swipe_layout);
         swipeContainer.setColorSchemeResources(R.color.colorPrimary);
         swipeContainer.setOnRefreshListener(() -> getPopularMovies());
+
+        getPopularMovies();
     }
 
     private void getPopularMovies() {
-        movies = new ArrayList<>();
-
-        api = RetrofitInstance.getService();
-
-        singleCall = api.getPopularMovies(getString(R.string.api_key));
-
-        compositeDisposable.add(
-                singleCall
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(new DisposableSingleObserver<MovieDBResponse>() {
-                            @Override
-                            public void onSuccess(MovieDBResponse movieDBResponse) {
-                                movies.addAll(movieDBResponse.getMovies());
-                                init();
-                                hideSwipe();
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-                        })
-        );
+        viewModel.getPopularMovies().observe(this, moviesList -> {
+            movies = (ArrayList<Movie>) moviesList;
+            init();
+        });
+        hideSwipe();
     }
 
     public void init() {
@@ -98,6 +70,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        compositeDisposable.clear();
+        viewModel.clear();
     }
 }
