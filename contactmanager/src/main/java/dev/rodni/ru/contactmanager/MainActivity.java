@@ -18,19 +18,17 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-
 import dev.rodni.ru.contactmanager.adapter.ContactsAdapter;
 import dev.rodni.ru.contactmanager.db.ContactsAppDatabase;
 import dev.rodni.ru.contactmanager.db.entity.Contact;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Action;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.schedulers.Schedulers;
 
+@SuppressLint("CheckResult")
 public class MainActivity extends AppCompatActivity {
 
     private ContactsAdapter contactsAdapter;
@@ -40,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private ContactsAppDatabase contactsAppDatabase;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,7 +140,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteContact(Contact contact, int position) {
-        contactsAppDatabase.getContactDAO().deleteContact(contact);
+        compositeDisposable.add(
+                Completable.fromAction(() -> contactsAppDatabase.getContactDAO().deleteContact(contact))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableCompletableObserver() {
+                            @Override
+                            public void onComplete() {
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                            }
+                        })
+        );
     }
 
     private void updateContact(String name, String email, int position) {
@@ -152,27 +161,41 @@ public class MainActivity extends AppCompatActivity {
         contact.setName(name);
         contact.setEmail(email);
 
-        contactsAppDatabase.getContactDAO().updateContact(contact);
+        compositeDisposable.add(
+                Completable.fromAction(() -> contactsAppDatabase.getContactDAO().updateContact(contact))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableCompletableObserver() {
+                            @Override
+                            public void onComplete() {
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                            }
+                        })
+        );
     }
 
 
     private void createContact(String name, String email) {
-        //this long id return number of rows
-        Completable.fromAction(() -> {
-            long id = contactsAppDatabase.getContactDAO().addContact(new Contact(0,name, email));
-        })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeWith(new DisposableCompletableObserver() {
-            @Override
-            public void onComplete() {
+        compositeDisposable.add(
+                //this long id return number of rows
+                Completable.fromAction(() -> {
+                    long id = contactsAppDatabase.getContactDAO().addContact(new Contact(0,name, email));
+                })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableCompletableObserver() {
+                            @Override
+                            public void onComplete() {
 
-            }
-            @Override
-            public void onError(Throwable e) {
+                            }
+                            @Override
+                            public void onError(Throwable e) {
 
-            }
-        });
+                            }
+                        })
+        );
     }
 
     @Override
