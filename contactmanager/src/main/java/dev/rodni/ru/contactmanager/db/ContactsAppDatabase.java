@@ -7,5 +7,5 @@ import dev.rodni.ru.contactmanager.db.entity.Contact;
 
 @Database(entities = {Contact.class},version = 1)
 public abstract class ContactsAppDatabase extends RoomDatabase {
-    public abstract ContactDAO getContactDAO();
+    public abstract ContactsDAO getContactDAO();
 }

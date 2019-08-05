@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import dev.rodni.ru.contactmanager.db.entity.Contact;
-import dev.rodni.ru.contactmanager.MainActivity;
+import dev.rodni.ru.contactmanager.view.MainActivity;
 import dev.rodni.ru.contactmanager.R;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyViewHolder> {

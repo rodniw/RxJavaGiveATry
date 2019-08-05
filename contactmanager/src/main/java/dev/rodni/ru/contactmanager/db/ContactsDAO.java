@@ -12,7 +12,7 @@ import dev.rodni.ru.contactmanager.db.entity.Contact;
 import io.reactivex.Flowable;
 
 @Dao
-public interface ContactDAO {
+public interface ContactsDAO {
     @Insert
     long addContact(Contact contact);
 
