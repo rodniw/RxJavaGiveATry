@@ -29,7 +29,7 @@ public class ContactsRepository {
                 ContactsAppDatabase.class,
                 "ContactDB")
                 .build();
-        readContact();
+        readContacts();
     }
 
     public void createContact(String name, String email) {
@@ -52,7 +52,7 @@ public class ContactsRepository {
         );
     }
 
-    public void readContact() {
+    public void readContacts() {
         compositeDisposable.add(
                 contactsAppDatabase.getContactDAO().getContacts()
                         .subscribeOn(Schedulers.computation())

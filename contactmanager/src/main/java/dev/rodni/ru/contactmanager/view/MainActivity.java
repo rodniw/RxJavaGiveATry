@@ -1,6 +1,7 @@
 package dev.rodni.ru.contactmanager.view;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -17,11 +18,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 
 import dev.rodni.ru.contactmanager.R;
 import dev.rodni.ru.contactmanager.adapter.ContactsAdapter;
 import dev.rodni.ru.contactmanager.db.entity.Contact;
+import dev.rodni.ru.contactmanager.view.viewmodel.ContactsViewModel;
 
 @SuppressLint("CheckResult")
 public class MainActivity extends AppCompatActivity {
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Contact> contactArrayList = new ArrayList<>();
     private Contact contact;
     private RecyclerView recyclerView;
+    private ContactsViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Contacts Manager");
 
+        viewModel = ViewModelProviders.of(this).get(ContactsViewModel.class);
+
         recyclerView = findViewById(R.id.recycler_view_contacts);
 
         contactsAdapter = new ContactsAdapter(this, contactArrayList, MainActivity.this);
@@ -46,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(contactsAdapter);
+
+        readContacts();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> addAndEditContacts(false, null, -1));
@@ -118,11 +126,33 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void createContact(String name, String email) {
+        viewModel.create(name, email);
+    }
+
+    private void readContacts() {
+        viewModel.getAllContacts().observe(this, contacts -> {
+            contactArrayList.clear();
+            contactArrayList.addAll(contacts);
+            contactsAdapter.notifyDataSetChanged();
+        });
+    }
+
+    private void updateContact(String name, String email, int position) {
+        contact = contactArrayList.get(position);
+        contact.setName(name);
+        contact.setEmail(email);
+
+        viewModel.update(contact);
+    }
+
+    private void deleteContact(Contact contact, int position) {
+        viewModel.delete(contact);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        viewModel.clear();
     }
 }
-
-//after using room with rx we can delete all notifies method from crud operations
-//because we always listening to all the changes already
