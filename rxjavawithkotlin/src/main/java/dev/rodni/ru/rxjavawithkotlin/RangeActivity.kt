@@ -21,6 +21,6 @@ class RangeActivity : AppCompatActivity() {
 
     private fun getObservableRange() : Observable<Int> {
         //start point is 10 and it will count to 30 because range is 20
-        return Observable.range(10, 20)
+        return Observable.range(10, 20).repeat(2)
     }
 }
