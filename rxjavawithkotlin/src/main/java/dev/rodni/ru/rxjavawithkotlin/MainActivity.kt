@@ -6,6 +6,7 @@ import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,24 +14,38 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val dataStream = Observable.just(10,20,30,40)
+        val ints = arrayOf(1, 3, 5, 15)
 
-        val dataObserver = object : Observer<Int> {
-            override fun onComplete() {
-                println("onComplete")
-            }
-            override fun onSubscribe(d: Disposable) {
-            }
-            override fun onNext(t: Int) {
-                println("onNext: $t")
-            }
-            override fun onError(e: Throwable) {
-                println("onError: ${e.message}")
-            }
-        }
+        val dataStream = getObservable(ints)
+
+        val dataObserver = getObserver()
 
         dataStream
                 .subscribeOn(Schedulers.io())
                 .subscribe(dataObserver)
+    }
+
+    private fun getObservable(ints: Array<Int>) : Observable<Array<Int>> {
+        return Observable.fromArray(ints)
+    }
+
+    private fun getObserver() : Observer<Array<Int>>{
+        return object : Observer<Array<Int>> {
+            override fun onComplete() {
+                println("onComplete")
+            }
+
+            override fun onSubscribe(d: Disposable) {
+                println("onSubscribe")
+            }
+
+            override fun onNext(t: Array<Int>) {
+                println("onNext ${Arrays.toString(t)}")
+            }
+
+            override fun onError(e: Throwable) {
+                println("onError ${e.message}")
+            }
+        }
     }
 }
